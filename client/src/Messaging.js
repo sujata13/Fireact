@@ -29,11 +29,17 @@ export const Messaging = () => {
           message: "",
         }}
         onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-            toast.success("Submitted succesfully");
-          }, 1000);
+          axios
+            .post("/messages", values)
+            .then((resp) => {
+              setMessages(resp.data.messages.concat(messages));
+              actions.setSubmitting(false);
+              toast.success("Submitted succesfully");
+            })
+            .catch((err) => {
+              console.log(err);
+              toast.error("There was an error saving the message");
+            });
         }}
       >
         {(prop) => {
